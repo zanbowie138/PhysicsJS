@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export class WebGL {
+export abstract class WebGL {
 	public renderer: THREE.WebGLRenderer
 	public scene: THREE.Scene
 	public camera: THREE.PerspectiveCamera
@@ -25,7 +25,11 @@ export class WebGL {
   
 	  // Resize canvas when window is resized
 	  window.addEventListener('resize', this.handleResize)
+
+	  this.init();
 	}
+
+	abstract init(): void;
   
 	private handleResize = () => {
 	  this.resizeCallback && this.resizeCallback()
@@ -41,11 +45,12 @@ export class WebGL {
 	  return { width, height, aspect: width / height }
 	}
   
-	setup(container: HTMLElement) {
-	  container.appendChild(this.renderer.domElement)
+	attach(container: HTMLElement) {
+		// Attach frame to container
+	  	container.appendChild(this.renderer.domElement)
 	}
   
-	setResizeCallback(callback: () => void) {
+ 	setResizeCallback(callback: () => void) {
 	  this.resizeCallback = callback
 	}
   
@@ -53,16 +58,12 @@ export class WebGL {
 	  return this.scene.getObjectByName(name) as THREE.Mesh<THREE.BufferGeometry, T>
 	}
   
-	render() {
-	  	this.renderer.render(this.scene, this.camera)
-	}
-  
 	requestAnimationFrame(callback: () => void) {
 	  	this.renderer.setAnimationLoop(() => {
-		this.time.delta = this.clock.getDelta()
-		this.time.elapsed = this.clock.getElapsedTime()
-		callback()
-	  })
+			this.time.delta = this.clock.getDelta()
+			this.time.elapsed = this.clock.getElapsedTime()
+			callback()
+	  	})
 	}
   
 	cancelAnimationFrame() {

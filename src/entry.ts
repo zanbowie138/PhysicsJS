@@ -5,6 +5,7 @@ const container = document.querySelector<HTMLDivElement>('.webgl-canvas__contain
 if (container != null) {
     let m_canvas = new Frame();
     m_canvas.attach(container);
+    
     // window.addEventListener('beforeunload', () => {
     //     m_canvas.dispose();
     //   })
