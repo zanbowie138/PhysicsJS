@@ -45,7 +45,7 @@ export class Frame extends WebGL {
 		//this.scene.fog = new THREE.Fog( 0xa0a0a0, 10, 50 );
         
 
-        const ambient_light = new THREE.AmbientLight( 0x404040 );
+        //const ambient_light = new THREE.AmbientLight( 0x404040 );
         //this.scene.add(ambient_light);
 
         const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x8d8d8d, 3 );
@@ -58,7 +58,7 @@ export class Frame extends WebGL {
 
         const cube_geometry = new THREE.BoxGeometry( 1, 1, 1 );
         const material = new THREE.MeshStandardMaterial( { color: 0x00ff00 } );
-        const depth_mat = new THREE.MeshDepthMaterial();
+        //const depth_mat = new THREE.MeshDepthMaterial();
         const cube = new THREE.Mesh( cube_geometry, material );
         cube.castShadow = true;
         this.scene.add( cube );
