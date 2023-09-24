@@ -22,6 +22,7 @@ export abstract class WebGL {
   
 	  this.scene = new THREE.Scene()
 	  this.camera = new THREE.PerspectiveCamera(45, aspect, 1, 1000 )
+	  this.camera.up.set(0,1,0);
   
 	  // Resize canvas when window is resized
 	  window.addEventListener('resize', this.handleResize)
