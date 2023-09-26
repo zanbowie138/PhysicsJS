@@ -3,7 +3,7 @@ import {WebGL} from './WebGL';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { FlakesTexture } from 'three/examples/jsm/textures/FlakesTexture.js';
-//import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 
 export class Frame extends WebGL {
 
@@ -78,12 +78,12 @@ export class Frame extends WebGL {
         point_light.castShadow = true;
         this.scene.add( point_light, pointLightHelper );
 
-        // new RGBELoader().load('sunset.hdr', (texture) => {
-        //     texture.mapping = THREE.EquirectangularReflectionMapping;
+        new RGBELoader().load('sunset.hdr', (texture) => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
 
-        //     this.scene.background = texture;
-        //     this.scene.environment = texture;
-        // });
+            this.scene.background = texture;
+            this.scene.environment = texture;
+        });
 
         const texture = new THREE.CanvasTexture(new FlakesTexture());
         texture.wrapS = THREE.RepeatWrapping;
