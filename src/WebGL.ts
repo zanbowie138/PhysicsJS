@@ -14,7 +14,7 @@ export abstract class WebGL {
 	  const { width, height, aspect } = this.size
   
 	  // Initialize renderer
-	  this.renderer = new THREE.WebGLRenderer({alpha: true})
+	  this.renderer = new THREE.WebGLRenderer({alpha: true, antialias: true})
 
 	  // Set size
 	  this.renderer.setPixelRatio(window.devicePixelRatio)
@@ -26,8 +26,6 @@ export abstract class WebGL {
   
 	  // Resize canvas when window is resized
 	  window.addEventListener('resize', this.handleResize)
-
-	  this.init();
 	}
 
 	abstract init(): void;
