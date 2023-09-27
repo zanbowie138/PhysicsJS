@@ -4,6 +4,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { FlakesTexture } from 'three/examples/jsm/textures/FlakesTexture.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
 
 export class Frame extends WebGL {
 
@@ -67,8 +69,45 @@ export class Frame extends WebGL {
         });
     }
 
+    private loadGLTF() {
+        const loader = new GLTFLoader();
+        // Load a glTF resource
+        loader.load(
+            // resource URL
+            'motor.gltf',
+
+            // called when the resource is loaded
+            ( gltf ) => {
+
+                gltf.scene.scale.setScalar(50);
+
+                this.scene.add( gltf.scene );
+
+                gltf.animations; // Array<THREE.AnimationClip>
+                gltf.scene; // THREE.Group
+                gltf.scenes; // Array<THREE.Group>
+                gltf.cameras; // Array<THREE.Camera>
+                gltf.asset; // Object
+
+            },
+            // called while loading is progressing
+            function ( xhr ) {
+
+                console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+            },
+            // called when loading has errors
+            function ( error ) {
+
+                alert( error );
+
+            }
+        );
+    }
+
     init() {
         this.loadBackground();
+        this.loadGLTF();
         
         this.scene.add(new THREE.AxesHelper(5))
 
@@ -130,7 +169,7 @@ export class Frame extends WebGL {
         const sphere = new THREE.Mesh(new THREE.SphereGeometry(), new THREE.MeshStandardMaterial(objMaterial));
         sphere.castShadow = true;
         this.physics_objects.push(sphere);
-        this.scene.add( sphere );
+        //this.scene.add( sphere );
 
         const planeMaterial = {
             metalness: 1.0,
