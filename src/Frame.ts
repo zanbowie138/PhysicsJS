@@ -30,20 +30,42 @@ export class Frame extends WebGL {
           })
     }
 
+    private loadBackground() {
+        let rgbeloader = new RGBELoader();
+
+        // Get progress bar with tag "progressBar"
+        const progressBar = document.getElementById(
+            'progressBar'
+        ) as HTMLProgressElement
+        
+        // Hide canvas until loading is finished
+        this.renderer.domElement.style.display = 'none';
+
+        // Initially set progress bar value to zero
+        progressBar.value = 0;
+
+        rgbeloader.loadAsync('sunset.hdr',
+        // Callback for inProgress
+        (xhr) => {
+            const percentComplete = (xhr.loaded / xhr.total) * 100
+
+            // Update progress bar
+            progressBar.value = percentComplete === Infinity ? 100 : percentComplete
+        }).then((texture) => {
+            progressBar.style.display = 'none'
+            this.renderer.domElement.style.display = 'block'
+
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+
+            this.scene.background = texture;
+            this.scene.environment = texture;
+        });
+    }
+
     init() {
-        // const dir = new THREE.Vector3( 0, 1, 0 );
-
-        // //normalize the direction vector (convert to vector of length 1)
-        // dir.normalize();
-
-        // const origin = new THREE.Vector3( 0, 0, 0 );
-        // const length = 1;
-        // const hex = 0xffff00;
-
-        // const arrowHelper = new THREE.ArrowHelper( new THREE.Vector3(0,1,0) );
-        // this.scene.add( arrowHelper );
+        this.loadBackground();
+        
         this.scene.add(new THREE.AxesHelper(5))
-        //this.camera.position.y = 5;
 
         const controls = new OrbitControls( this.camera, this.renderer.domElement );
         this.camera.position.set( 0, 0, 5 );
@@ -59,7 +81,7 @@ export class Frame extends WebGL {
         this.renderer.shadowMap.enabled = true;
         this.renderer.outputColorSpace = THREE.SRGBColorSpace;
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 1.25;
+        this.renderer.toneMappingExposure = 1;
 
         this.scene.background = new THREE.Color( 0xa0a0a0 );
 		//this.scene.fog = new THREE.Fog( 0xa0a0a0, 10, 50 );
@@ -78,13 +100,6 @@ export class Frame extends WebGL {
         point_light.castShadow = true;
         this.scene.add( point_light, pointLightHelper );
 
-        new RGBELoader().load('sunset.hdr', (texture) => {
-            texture.mapping = THREE.EquirectangularReflectionMapping;
-
-            this.scene.background = texture;
-            this.scene.environment = texture;
-        });
-
         const texture = new THREE.CanvasTexture(new FlakesTexture());
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
@@ -92,8 +107,6 @@ export class Frame extends WebGL {
         texture.repeat.y = 6;
 
         const objMaterial = {
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.9,
             metalness: 1.0,
             roughness: 0.5,
             color: 0x8418ca,
@@ -114,17 +127,15 @@ export class Frame extends WebGL {
         this.physics_objects.push(sphere);
         this.scene.add( sphere );
 
-        // const planeMaterial = {
-        //     clearcoat: 1.0,
-        //     clearcoatRoughness: 0.9,
-        //     metalness: 1.0,
-        //     roughness: 0.5,
-        //     color: 0xffffff,
-        //     normalMap: texture,
-        //     normalScale: new THREE.Vector2(.05, .05)
-        // }
+        const planeMaterial = {
+            metalness: 1.0,
+            roughness: 0.5,
+            color: 0x000000,
+            normalMap: texture,
+            normalScale: new THREE.Vector2(.05, .05)
+        }
 
-        const plane = new THREE.Mesh(new THREE.PlaneGeometry( 200, 200), new THREE.MeshPhongMaterial());
+        const plane = new THREE.Mesh(new THREE.PlaneGeometry( 200, 200), new THREE.MeshStandardMaterial(planeMaterial));
         plane.material.side = THREE.DoubleSide;
         plane.position.set(0,-1,0);
         plane.rotation.x = degToRad(90);

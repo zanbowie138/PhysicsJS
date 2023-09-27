@@ -7,7 +7,19 @@
     <title>Physics Javascript</title>
   </head>
   <body>
-    <div class="webgl-canvas__container"></div>
+    <div class="webgl-canvas__container">
+      <progress value="0" max="100" id="progressBar"></progress>
+    </div>
     <script type="module" src="/src/entry.ts"></script>
   </body>
+  <style>
+    #progressBar {
+      width: 500px;
+      height: 24px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-left: -250px;
+    }
+  </style>
 </html>
