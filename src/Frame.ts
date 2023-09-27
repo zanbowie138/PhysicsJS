@@ -44,14 +44,9 @@ export class Frame extends WebGL {
         // Initially set progress bar value to zero
         progressBar.value = 0;
 
-        rgbeloader.loadAsync('sunset.hdr',
-        // Callback for inProgress
-        (xhr) => {
-            const percentComplete = (xhr.loaded / xhr.total) * 100
-
-            // Update progress bar
-            progressBar.value = percentComplete === Infinity ? 100 : percentComplete
-        }).then((texture) => {
+        rgbeloader.load('sunset.hdr',
+        // Called when completed
+        (texture) => {
             progressBar.style.display = 'none'
             this.renderer.domElement.style.display = 'block'
 
@@ -59,6 +54,16 @@ export class Frame extends WebGL {
 
             this.scene.background = texture;
             this.scene.environment = texture;
+        },
+        // Callback for when load is in progress
+        (xhr) => {
+            const percentComplete = (xhr.loaded / xhr.total) * 100
+
+            // Update progress bar
+            progressBar.value = percentComplete === Infinity ? 100 : percentComplete
+        },
+        (error) => {
+            console.log(error);
         });
     }
 
