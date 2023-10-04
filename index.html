@@ -8,18 +8,32 @@
   </head>
   <body>
     <div class="webgl-canvas__container">
-      <progress value="0" max="100" id="progressBar"></progress>
+      <div class="progress-loader">
+        <progress value="0" max="100" id="progressBar"></progress>
+        <h2 id="progressBarLabel">Loading...</h2>
+      </div>
     </div>
     <script type="module" src="/src/entry.ts"></script>
   </body>
   <style>
-    #progressBar {
+    .progress-loader > progress {
       width: 500px;
       height: 24px;
+    }
+
+    .progress-loader > h2 {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .progress-loader {
       position: absolute;
-      left: 50%;
+      width: fit-content;
+      text-align: center;
+      transform: translate(-50%, -50%);
       top: 50%;
-      margin-left: -250px;
+      left: 50%;
+    }
+    body {
+      margin: 0px;
     }
   </style>
 </html>

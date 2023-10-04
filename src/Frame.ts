@@ -37,6 +37,11 @@ export class Frame extends WebGL {
         const progressBar = document.getElementById(
             'progressBar'
         ) as HTMLProgressElement
+
+        // Get label with tag "progressBarLabel"
+        const label = document.getElementById(
+            'progressBarLabel'
+        ) as HTMLProgressElement
         
         // Hide canvas until loading is finished
         this.renderer.domElement.style.display = 'none';
@@ -44,11 +49,14 @@ export class Frame extends WebGL {
         // Initially set progress bar value to zero
         progressBar.value = 0;
 
+        label.textContent = "Loading... 0%"
+
         rgbeloader.load('sunset.hdr',
         // Called when completed
         (texture) => {
-            progressBar.style.display = 'none'
-            this.renderer.domElement.style.display = 'block'
+            progressBar.style.display = 'none';
+            this.renderer.domElement.style.display = 'block';
+            label.style.display = 'none';
 
             texture.mapping = THREE.EquirectangularReflectionMapping;
 
@@ -61,6 +69,9 @@ export class Frame extends WebGL {
 
             // Update progress bar
             progressBar.value = percentComplete === Infinity ? 100 : percentComplete
+
+            // Update progress bar label
+            label.textContent = "Loading... " + Math.round(Math.min(percentComplete, 100)) + "%";
         },
         (error) => {
             console.log(error);
